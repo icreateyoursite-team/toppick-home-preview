@@ -534,3 +534,14 @@ h3{font-weight:500;letter-spacing:-.02em}
 .h2-blue{color:var(--blue)}
 .vis-card{border-radius:var(--radius);background:var(--bg);padding:clamp(14px,2.4vw,32px);box-shadow:0 0 0 1px rgba(13,17,23,.06) inset}
 @media (max-width:699px){.vis-card{padding:10px;margin-inline:-6px}}
+
+/* AI tool: balanced bento (desktop and tablet) */
+@media (min-width:961px){
+  #design-tool .rv .rv-grid{grid-template-columns:minmax(0,1.7fr) minmax(340px,1fr);gap:24px;align-items:stretch}
+  #design-tool .rv .rv-aside{gap:24px;align-self:start}
+  /* the left card grows to the height of the right column, and the upload box takes up the extra room */
+  #design-tool .rv .rv-card{display:flex;flex-direction:column}
+  #design-tool .rv .rv-panel.show{flex:1;display:flex;flex-direction:column}
+  #design-tool .rv .rv-panel.show>.rv-drop{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  #design-tool .rv .rv-card,#design-tool .rv .rv-aside-card,#design-tool .rv .rv-note{padding:28px}
+}
