@@ -14,7 +14,8 @@
 <link rel="preconnect" href="https://api.fontshare.com">
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,401,500,501,700,701,900&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="images/hero-kitchen-v4.jpg" media="(min-width: 700px)">
-<link rel="stylesheet" href="styles.css?v=20261118m">
+<link rel="stylesheet" href="styles.css?v=20261118o">
+<link rel="stylesheet" href="visualizer/visualizer.css?v=1">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"GeneralContractor","name":"Top Pick Construction & Remodeling","url":"https://www.toppickservices.com/","telephone":"+1-312-307-0040","email":"remodeling@toppickservices.com","image":"https://www.toppickservices.com/images/hero-kitchen-v4.jpg","address":{"@type":"PostalAddress","streetAddress":"680 North Lake Shore Drive, Suite 110","addressLocality":"Chicago","addressRegion":"IL","postalCode":"60611","addressCountry":"US"},"areaServed":"Chicagoland"}
 </script>
@@ -106,6 +107,7 @@
           </div>
         </li>
         <li class="nav__item"><a class="nav__link" href="#projects">Projects</a></li>
+        <li class="nav__item"><a class="nav__link" href="#design-tool">AI Design</a></li>
         <li class="nav__item"><a class="nav__link" href="#why">Why Us</a></li>
         <li class="nav__item"><a class="nav__link" href="#faq">FAQ</a></li>
         <li class="nav__item"><a class="nav__link" href="#contact">Contact</a></li>
@@ -252,6 +254,40 @@
       </figure>
     </div>
   </div>
+</section>
+
+<!-- AI REMODEL VISUALIZER -->
+<section class="sec sec--visual" id="design-tool">
+  <div class="wrap">
+    <div class="head reveal">
+      <div>
+        <p class="lbl">// AI Design Tool</p>
+        <h2>See your remodel <span class="h2-blue">before we build it.</span></h2>
+      </div>
+      <div class="head__side">
+        <p>Upload a photo of your kitchen or bathroom, pick a style, and see a realistic remodel of your own room in about 10 seconds. Then book a free estimate to make it real.</p>
+      </div>
+    </div>
+    <div class="vis-card">
+      <div id="remodel-visualizer"></div>
+    </div>
+  </div>
+  <script>
+  window.RV_CONFIG = {
+    business: "Top Pick",
+    ctaText: "Ready to Upgrade? Request a Free Estimate",
+    ctaUrl: "#contact",
+    headingTag: "h2",
+    showIntro: false,
+    stickyTop: "100px",
+    colors: {
+      primary: "#1688ff", primaryDeep: "#0a62d6", accent: "#0a62d6", note: "#1688ff",
+      ink: "#0d1117", inkSoft: "#556172",
+      surface: "#f2f6fb", field: "#f5f8fc", muted: "#dfe7f1"
+    }
+  };
+  </script>
+  <script src="visualizer/visualizer.js?v=1" defer></script>
 </section>
 
 <!-- WHY -->
