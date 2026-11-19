@@ -545,3 +545,14 @@ h3{font-weight:500;letter-spacing:-.02em}
   #design-tool .rv .rv-panel.show>.rv-drop{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
   #design-tool .rv .rv-card,#design-tool .rv .rv-aside-card,#design-tool .rv .rv-note{padding:28px}
 }
+
+/* Services cards: keep icon, heading and description at the same height in every card
+   (wide screens fit everything on one line; on mid widths reserve two description lines) */
+@media (min-width:700px) and (max-width:1279px){
+  #services .svc__body{padding:24px 22px}
+  #services .svc__body h3{font-size:clamp(18px,2.05vw,24px);white-space:nowrap}
+  #services .svc__body p{min-height:calc(1.55em * 2)}
+}
+@media (min-width:700px) and (max-width:900px){
+  #services .svc__card:last-child .svc__body p{min-height:0}
+}
