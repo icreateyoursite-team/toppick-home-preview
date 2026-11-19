@@ -556,3 +556,68 @@ h3{font-weight:500;letter-spacing:-.02em}
 @media (min-width:700px) and (max-width:900px){
   #services .svc__card:last-child .svc__body p{min-height:0}
 }
+
+/* ========== TrueSource lessons, adapted to Top Pick (Nov 2026) ========== */
+
+/* Typography: no lone words on a last line */
+h1,h2,h3{text-wrap:balance}
+p,li,blockquote,figcaption{text-wrap:pretty}
+small,.hero__trust small,.hero__trust b,.svc-mini__item small,.mega__links small,.head__side p,.sec__head p,.why__lead,
+.banner__copy>p,.area__lead,.cta__copy>p,.wcard p,.qa__a p,.ba figcaption span,.ftr__brand p,.form__sub,
+#design-tool .rv p{text-wrap:balance}
+@media (max-width:900px){.lb{display:none}}
+
+/* Hero: white secondary button with blue text and outline, a quiet call line */
+.btn--white{background:#fff;color:var(--blue-deep);border:1.5px solid var(--blue);box-shadow:0 12px 30px -14px rgba(0,0,0,.5)}
+.btn--white::before{background:linear-gradient(180deg,var(--blue-2),var(--blue))}
+.btn--white:hover{color:#fff;transform:translateY(-2px)}
+.btn--white .ic{color:inherit}
+.hero__call{margin-top:16px;font-size:15px;color:rgba(233,238,244,.82)}
+.hero__call a{color:#fff;font-weight:700;border-bottom:1px solid rgba(127,186,255,.6);padding-bottom:1px}
+.hero__call a:hover{color:#7fbaff}
+
+/* Section label: a small pill with a dot, not long rules */
+.tag-pill{display:inline-flex;align-items:center;gap:9px;padding:6px 14px 6px 11px;border-radius:999px;font-size:11.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--blue-deep);background:#fff;border:1px solid rgba(22,136,255,.22);box-shadow:0 6px 18px -12px rgba(10,98,214,.6)}
+.tag-pill::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 3px rgba(22,136,255,.16)}
+.sec__head .tag-pill{margin-bottom:2px}
+
+/* Photos instead of icons */
+.thumb{flex:none;width:64px;height:48px;border-radius:9px;overflow:hidden;background:var(--ink-3);box-shadow:0 0 0 1px rgba(255,255,255,.12)}
+.thumb img{width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ease)}
+.mega__links a:hover .thumb img{transform:scale(1.08)}
+.thumb--lg{width:84px;height:63px;border-radius:11px;box-shadow:0 0 0 1px var(--line)}
+.svc-mini__item:hover .thumb img{transform:scale(1.08)}
+.svc-mini__item{padding:14px 20px 14px 14px}
+
+/* Backgrounds: never two neighbours on the same ground */
+#area{background:#fff}
+
+/* Estimate pop-up */
+.modal{position:fixed;inset:0;z-index:250;display:grid;place-items:center;padding:24px}
+.modal[hidden]{display:none}
+.modal__backdrop{position:absolute;inset:0;background:rgba(6,8,12,.62);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);animation:mFade .3s ease}
+.modal__panel{position:relative;width:min(580px,100%);max-height:calc(100vh - 48px);overflow-y:auto;border-radius:var(--radius);
+  background:linear-gradient(135deg,var(--soft) 0%,var(--soft-2) 100%);box-shadow:0 40px 90px -30px rgba(0,0,0,.7);animation:mPop .4s var(--ease)}
+.form--modal{padding:34px 32px 22px}
+.form--modal h3{margin-top:14px;font-size:clamp(26px,3vw,32px);font-weight:500;letter-spacing:-.03em;line-height:1.1}
+.form--modal .form__sub{margin:10px 0 20px;color:#3f4957}
+.modal__x{position:absolute;right:16px;top:16px;z-index:2;width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:#fff;color:var(--ink);box-shadow:0 6px 16px -8px rgba(0,0,0,.35)}
+.modal__x:hover{background:var(--ink);color:#fff}
+.modal__call{margin-top:6px;text-align:center;font-size:14.5px;color:#3f4957}
+.modal__call a{font-weight:700;color:var(--ink)}
+.modal__skip{display:block;margin:4px auto 0;padding:8px 12px;font-size:13.5px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.modal__skip:hover{color:var(--ink)}
+body.modal-open{overflow:hidden}
+@keyframes mFade{from{opacity:0}to{opacity:1}}
+@keyframes mPop{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+@media (max-width:699px){
+  .modal{padding:10px}
+  .modal__panel{max-height:calc(100vh - 20px)}
+  .form--modal{padding:26px 18px 16px}
+  .hero__call{text-align:center}
+}
+@media (prefers-reduced-motion:reduce){.modal__backdrop,.modal__panel{animation:none}}
+
+/* the italic accent phrase never splits, so its drawn underline stays under the words */
+.accent{display:inline-block;max-width:100%}

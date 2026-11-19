@@ -120,30 +120,83 @@
     if (e.key === 'Escape') { closeMega(); closeNav(); }
   });
 
-  /* estimate form: time trap + friendly errors (server does the real checks) */
-  const form = d.getElementById('estimateForm');
+  /* estimate forms (bottom of page + pop-up): time trap + friendly errors (server does the real checks) */
   const t0 = performance.now();
-  const msg = form.querySelector('.form__msg');
-  const btn = form.querySelector('button[type=submit]');
-  const btnHTML = btn.innerHTML;
-  const say = (t, c) => { msg.textContent = t; msg.className = 'form__msg ' + (c || ''); };
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    form.elements.ts.value = Math.round(performance.now() - t0);
-    let bad = false;
-    ['name', 'phone', 'email'].forEach(n => {
-      const f = form.elements[n], v = f.value.trim();
-      const ok = v !== '' && (n !== 'email' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));
-      f.closest('.fld').classList.toggle('is-bad', !ok); if (!ok) bad = true;
+  d.querySelectorAll('form.js-estimate').forEach(form => {
+    const msg = form.querySelector('.form__msg');
+    const btn = form.querySelector('button[type=submit]');
+    const btnHTML = btn.innerHTML;
+    const say = (t, c) => { msg.textContent = t; msg.className = 'form__msg ' + (c || ''); };
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      form.elements.ts.value = Math.round(performance.now() - t0);
+      let bad = false;
+      ['name', 'phone', 'email'].forEach(n => {
+        const f = form.elements[n], v = f.value.trim();
+        const ok = v !== '' && (n !== 'email' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));
+        f.closest('.fld').classList.toggle('is-bad', !ok); if (!ok) bad = true;
+      });
+      if (bad) { say('Please fill in your name, phone and a valid email.', 'err'); return; }
+      btn.disabled = true; btn.innerHTML = '<span>Sending...</span>'; say('');
+      try {
+        const res = await fetch(form.action, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.fromEntries(new FormData(form))) });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.ok) { form.reset(); say('Thank you for contacting us. We will get back to you as soon as possible. For anything urgent, call (312) 307-0040.', 'ok'); }
+        else say(data.error || 'Oops, there was an error sending your message. Please call (312) 307-0040.', 'err');
+      } catch { say('Oops, there was an error sending your message. Please call (312) 307-0040 or email remodeling@toppickservices.com.', 'err'); }
+      finally { btn.disabled = false; btn.innerHTML = btnHTML; }
     });
-    if (bad) { say('Please fill in your name, phone and a valid email.', 'err'); return; }
-    btn.disabled = true; btn.innerHTML = '<span>Sending...</span>'; say('');
-    try {
-      const res = await fetch(form.action, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.fromEntries(new FormData(form))) });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok && data.ok) { form.reset(); say('Thank you for contacting us. We will get back to you as soon as possible. For anything urgent, call (312) 307-0040.', 'ok'); }
-      else say(data.error || 'Oops, there was an error sending your message. Please call (312) 307-0040.', 'err');
-    } catch { say('Oops, there was an error sending your message. Please call (312) 307-0040 or email remodeling@toppickservices.com.', 'err'); }
-    finally { btn.disabled = false; btn.innerHTML = btnHTML; }
+  });
+
+  /* estimate pop-up: every "Free Estimate" button opens it instead of scrolling away */
+  const modal = d.getElementById('estimateModal');
+  const mForm = d.getElementById('estimateModalForm');
+  const POP_KEY = 'tp_estimate_popup_seen';
+  let lastFocus = null;
+  const markSeen = () => { try { sessionStorage.setItem(POP_KEY, '1'); } catch (x) {} };
+  const openEstimate = (opts = {}) => {
+    lastFocus = d.activeElement;
+    closeMega(); closeNav();
+    if (opts.service !== undefined && opts.service !== '') mForm.elements.service.value = opts.service;
+    if (opts.message && !mForm.elements.message.value) mForm.elements.message.value = opts.message;
+    modal.hidden = false; body.classList.add('modal-open');
+    markSeen();
+    /* an automatic pop-up focuses the close button, so phones don't jump to the keyboard */
+    setTimeout(() => (opts.auto ? modal.querySelector('.modal__x') : mForm.elements.name).focus(), 60);
+  };
+  const closeEstimate = () => {
+    modal.hidden = true; body.classList.remove('modal-open');
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  };
+  window.tpOpenEstimate = openEstimate;
+  d.querySelectorAll('[data-modal="estimate"]').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault(); openEstimate({ service: a.dataset.service || '' });
+  }));
+  modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeEstimate));
+
+  /* automatic pop-up: once per visit, the first time the visitor reaches "Why Top Pick" */
+  const popAt = d.getElementById('why');
+  if (popAt && 'IntersectionObserver' in window) {
+    const popIO = new IntersectionObserver(entries => {
+      if (!entries.some(en => en.isIntersecting)) return;
+      let seen = false; try { seen = !!sessionStorage.getItem(POP_KEY); } catch (x) {}
+      if (seen) { popIO.disconnect(); return; }
+      const busy = !modal.hidden || !lb.hidden || body.classList.contains('nav-open') || svc.classList.contains('is-open') ||
+        (d.activeElement && /INPUT|TEXTAREA|SELECT/.test(d.activeElement.tagName));
+      if (busy) return;
+      popIO.disconnect();
+      setTimeout(() => { if (modal.hidden && lb.hidden) openEstimate({ auto: true }); }, 700);
+    }, { threshold: 0.35 });
+    popIO.observe(popAt);
+  }
+
+  d.addEventListener('keydown', e => {
+    if (modal.hidden) return;
+    if (e.key === 'Escape') { closeEstimate(); return; }
+    if (e.key === 'Tab') {
+      const f = [...modal.querySelectorAll('button, input, select, textarea, a[href]')].filter(el => !el.closest('.hp') && el.type !== 'hidden');
+      if (e.shiftKey && d.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && d.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+    }
   });
 })();
